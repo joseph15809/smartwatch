@@ -14,7 +14,7 @@
 
 // display resolution
 #define DISP_HOR 240
-#define DISP_VER 280
+#define DISP_VER 240
 
 #define LV_BUF_LINES 40 // buffer height
 #define LV_USE_LOG 0

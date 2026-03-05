@@ -24,11 +24,8 @@ void setup() {
   lv_init();
   lvgl_display::init(tft, DISP_HOR, DISP_VER, LV_BUF_LINES);
 
-  // Create a quick test UI
-  lv_obj_t* label = lv_label_create(lv_scr_act());
-  lv_label_set_text(label, "LVGL on nRF52840");
-  lv_obj_center(label);
-
+  app::init();
+  
   last_tick = millis();
 }
 
@@ -41,6 +38,5 @@ void loop() {
     last_tick = now;
   }
 
-  lv_timer_handler(); // run LVGL
-  delay(5);           // keep CPU chill; can remove later
+  app::loop();
 }

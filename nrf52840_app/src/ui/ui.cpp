@@ -1,38 +1,72 @@
 #include "ui.h"
 #include <lvgl.h>
 #include "../../include/lv_conf.h"
+#include "screens/lockscreen.h"
+// later:
+// #include "screens/health.h"
+// #include "screens/notifications.h"
+// #include "screens/music.h"
+// #include "screens/settings.h"
 
 namespace
 {
     enum class Screen {LOCKSCREEN, HEALTH, NOTIF, MUSIC, SETTINGS};
     Screen cur = Screen::LOCKSCREEN;
 
-    void show(Screen s)
-    {
-        cur = s;
-        lv_obj_clean(lv_scr_act());
+void show(Screen s)
+{
+    cur = s;
+    lv_obj_clean(lv_scr_act());   // wipe current screen
 
-        // placeholders
-        lv_obj_t* label = lv_label_create(lv_scr_act());
-        lv_label_set_text(label, 
-        (s == Screen::LOCKSCREEN) ? "Lock Screen" :
-        (s == Screen::HEALTH)     ? "Health" :
-        (s == Screen::NOTIF)      ? "Notifications" :
-        (s == Screen::MUSIC)      ? "Music" : "Settings");
-        lv_obj_center(label);
+    switch (s)
+    {
+        case Screen::LOCKSCREEN:
+            lockscreen_create();
+            break;
+
+        case Screen::HEALTH: {
+            // health_create();
+            lv_obj_t* label = lv_label_create(lv_scr_act());
+            lv_label_set_text(label, "Health");
+            lv_obj_center(label);
+        } break;
+
+        case Screen::NOTIF: {
+            // notif_create();
+            lv_obj_t* label = lv_label_create(lv_scr_act());
+            lv_label_set_text(label, "Notifications");
+            lv_obj_center(label);
+        } break;
+
+        case Screen::MUSIC: {
+            // music_create();
+            lv_obj_t* label = lv_label_create(lv_scr_act());
+            lv_label_set_text(label, "Music");
+            lv_obj_center(label);
+        } break;
+
+        case Screen::SETTINGS: {
+            // settings_create();
+            lv_obj_t* label = lv_label_create(lv_scr_act());
+            lv_label_set_text(label, "Settings");
+            lv_obj_center(label);
+        } break;
+
+        default:
+            break;
     }
+}
 }
 
 namespace ui
 {
     void init()
     {
-        lv_init();
         // TODO: init display + register LVGL display driver
         // - create draw buffer (partial)
         // - set flush callback
         // - register driver
-
+        // Create a quick test UI
         show(Screen::LOCKSCREEN);
     }
 
