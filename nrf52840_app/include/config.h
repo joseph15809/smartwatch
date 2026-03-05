@@ -17,4 +17,5 @@
 #define DISP_VER 280
 
 #define LV_BUF_LINES 40 // buffer height
-
+#define LV_USE_LOG 0
+#define LV_USE_PERF_MONITOR 0

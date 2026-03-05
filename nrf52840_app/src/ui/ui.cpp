@@ -1,6 +1,6 @@
 #include "ui.h"
 #include <lvgl.h>
-#include "../../include/config.h"
+#include "../../include/lv_conf.h"
 
 namespace
 {
@@ -18,8 +18,7 @@ namespace
         (s == Screen::LOCKSCREEN) ? "Lock Screen" :
         (s == Screen::HEALTH)     ? "Health" :
         (s == Screen::NOTIF)      ? "Notifications" :
-        (s == Screen::MUSIC)      ? "Music" :
-        (s == Screen::SETTINGS)     ? "Settings");
+        (s == Screen::MUSIC)      ? "Music" : "Settings");
         lv_obj_center(label);
     }
 }
@@ -63,7 +62,7 @@ namespace ui
                 // will updates time, step, etc.
             } break;
 
-            default break;
+            default: break;
         }
     }
 }

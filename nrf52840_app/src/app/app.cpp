@@ -49,11 +49,11 @@ namespace app
     {
         // periodic ticks, replays delay()
         uint32_t now = millis();
-        if (now - last10 >= 10) { last10 = now; post({EventType::TICK_10MS}); }
-        if (now - last1s >= 1000) { last1s = now; post({EventType::TICK_1S}); }
+        if (now - last10 >= 10) { last10 = now; post(Event(EventType::TICK_10MS)); }
+        if (now - last1s >= 1000) { last1s = now; post(Event(EventType::TICK_1S)); }
 
         // poll button, will later be interrupt
-        button::poll();
+        buttons::poll();
 
         // sends events
         Event e;

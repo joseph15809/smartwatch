@@ -1,6 +1,7 @@
 #include "buttons.h"
 #include "../app/app.h"
 #include "../../include/config.h"
+#include "../../include/lv_conf.h"
 #include <Arduino.h>
 
 namespace
@@ -30,7 +31,7 @@ namespace buttons
         // check if long button press
         if (!last && !cur && !long_sent && (now - t_down) > 600)
         {
-            app::post({EventType::BTN_LONG});
+            app::post(Event(EventType::BTN_LONG));
             long_sent = true;
         }
 
@@ -38,7 +39,7 @@ namespace buttons
         {
             if (!long_sent && (now - t_down) > 30) // makes sure it was a short button press
             {
-                app::post({EventType::BTN_SHORT});
+                app::post(Event(EventType::BTN_SHORT));
             }
         }
         last = cur;
