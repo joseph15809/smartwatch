@@ -1,6 +1,7 @@
 #include "app.h"
 #include "../ui/ui.h"
 #include "../hal/buttons.h"
+#include "../hal/touch.h"
 #include <Arduino.h>
 
 namespace
@@ -8,23 +9,23 @@ namespace
     // event circular queue
     constexpr int QSIZE = 16;
     Event q[QSIZE];
-    volatile int head = 0, tail = 0;
+    volatile uint8_t head = 0, tail = 0;
 
-    // push on top of queue
     bool q_push(const Event& e)
     {
-        int n = (head + 1) % QSIZE;
+        uint8_t n = (head + 1) % QSIZE;
         if (n == tail) return false; // returns if q is full
         q[head] = e;
+        __DMB(); // ensure the struct write completes before updating hea
         head = n;
         return true;
     }
 
-    // pop from tail
     bool q_pop(Event& out)
     {
         if (tail == head) return false; // q is empty
         out = q[tail];
+        __DMB();
         tail = (tail + 1) % QSIZE;
         return true;
     }
@@ -38,11 +39,14 @@ namespace app
     void init(){
         ui::init();
         buttons::init();
+        touch::init();
     }
 
     void post(const Event& e)
     {
+        noInterrupts();
         q_push(e);
+        interrupts();
     }
 
     void loop()
@@ -54,7 +58,33 @@ namespace app
 
         // poll button, will later be interrupt
         buttons::poll();
-
+        touch::poll();
+        if (touch::gesture() != touch::Gesture::NONE)
+        {
+            switch (touch::gesture()) 
+            {
+                case touch::Gesture::SINGLE_TAP:
+                    post(Event(EventType::TOUCH_TAP,
+                        touch::point().x, touch::point().y));
+                        break;
+                case touch::Gesture::SWIPE_UP:
+                    post(Event(EventType::TOUCH_SWIPE_UP));
+                    break;
+                case touch::Gesture::SWIPE_DOWN:
+                    post(Event(EventType::TOUCH_SWIPE_DOWN, touch::start_point().x, touch::start_point().y));
+                    break;
+                case touch::Gesture::SWIPE_LEFT:
+                    post(Event(EventType::TOUCH_SWIPE_LEFT));
+                    break;
+                case touch::Gesture::SWIPE_RIGHT:
+                    post(Event(EventType::TOUCH_SWIPE_RIGHT));
+                    break;
+                case touch::Gesture::LONG_PRESS:
+                    post(Event(EventType::TOUCH_LONG));
+                    break;
+                default: break;
+            }
+        }
         // sends events
         Event e;
         while (q_pop(e))

@@ -5,12 +5,12 @@
 #define PIN_TFT_DC   1
 #define PIN_TFT_RST  2
 #define PIN_TFT_BL   3
-
-// touch for when new screen arrives
+#define PIN_TP_SDA   4
+#define PIN_TP_SCL   5
 #define PIN_TP_INT   6
 #define PIN_TP_RST   7
 
-#define PIN_BTN      4 // button
+#define PIN_BTN      9 // button
 
 // display resolution
 #define DISP_HOR 240

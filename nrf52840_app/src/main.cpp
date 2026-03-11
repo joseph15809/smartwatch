@@ -1,13 +1,14 @@
+#include "config.h"
+#include "lv_conf.h"
+#include "app/app.h"
+#include "drivers/lvgl_display.h"
 #include <Arduino.h>
 #include <lvgl.h>
 #include <SPI.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_ST7789.h>
-#include "config.h"
-#include "app/app.h"
-#include "drivers/lvgl_display.h"
+#include <Adafruit_GC9A01A.h>
 
-Adafruit_ST7789 tft(PIN_TFT_CS, PIN_TFT_DC, PIN_TFT_RST);
+Adafruit_GC9A01A tft((int8_t)PIN_TFT_CS, (int8_t)PIN_TFT_DC, (int8_t)PIN_TFT_RST);
 static uint32_t last_tick = 0;
 
 void setup() {
@@ -16,14 +17,14 @@ void setup() {
   analogWrite(PIN_TFT_BL, 220);
 
   // init display
-  tft.init(DISP_HOR, DISP_VER);
-  tft.setRotation(0);
-  tft.fillScreen(ST77XX_BLACK);
+  tft.begin();
+ tft.fillScreen(0);
 
   // init lvgl
   lv_init();
   lvgl_display::init(tft, DISP_HOR, DISP_VER, LV_BUF_LINES);
 
+  // app::init() -> ui::init() -> rtc::init() + lockscreen_create()
   app::init();
   
   last_tick = millis();
