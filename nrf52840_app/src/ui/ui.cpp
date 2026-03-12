@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ui.h"
 #include "../hal/rtc.h"
+#include "../app/app.h"
 #include "screens/lockscreen.h"
 #include "screens/music.h"
 #include "screens/health.h"
@@ -252,6 +253,17 @@ namespace ui
                                     sizeof(s_thread.peer) - 1);
                             show(Screen::MESSAGE_THREAD);
                         }
+                    }
+                }
+                else if (cur == Screen::MUSIC)
+                {
+                    // Controls: y=158–210, container x=10–230
+                    // PREV x<80, PLAY/PAUSE x<150, NEXT x>=150
+                    if (ty >= 158 && ty < 210 && tx >= 10 && tx < 230)
+                    {
+                        if      (tx < 80)  app::post(Event(EventType::MEDIA_PREV));
+                        else if (tx < 150) app::post(Event(EventType::MEDIA_PLAYPAUSE));
+                        else               app::post(Event(EventType::MEDIA_NEXT));
                     }
                 }
             } break;

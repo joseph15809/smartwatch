@@ -2,6 +2,7 @@
 #include "../ui/ui.h"
 #include "../hal/buttons.h"
 #include "../hal/touch.h"
+#include "../hal/ble.h"
 #include <Arduino.h>
 
 namespace
@@ -37,6 +38,7 @@ namespace
 namespace app
 {
     void init(){
+        ble::init();
         ui::init();
         buttons::init();
         touch::init();
@@ -86,11 +88,17 @@ namespace app
                 default: break;
             }
         }
-        // sends events
+        // sends events — MEDIA_* are intercepted for BLE before reaching ui
         Event e;
         while (q_pop(e))
         {
-            ui::handle(e);
+            switch (e.type)
+            {
+                case EventType::MEDIA_PREV:      ble::media_prev();      break;
+                case EventType::MEDIA_PLAYPAUSE: ble::media_playpause(); break;
+                case EventType::MEDIA_NEXT:      ble::media_next();      break;
+                default:                         ui::handle(e);          break;
+            }
         }
 
         // lets LVGL always run
