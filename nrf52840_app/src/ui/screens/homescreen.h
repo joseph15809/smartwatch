@@ -5,7 +5,7 @@ enum AppId : uint8_t
 {
     HEALTH = 0,
     MUSIC,
-    NOTIFICATIONS,
+    MESSAGES,
     SETTINGS,
     COUNT
 };

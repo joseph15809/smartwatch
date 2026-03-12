@@ -9,7 +9,7 @@ namespace
     constexpr int COLS = 2;
     constexpr int ROWS = 2;
     constexpr int TOTAL_ICONS = COLS * ROWS; // 4
-    constexpr int ICON_SIZE = 70;
+    constexpr int ICON_SIZE = 60;
     constexpr int GAP = 24;
     constexpr int GRID_W = COLS * ICON_SIZE + (COLS - 1) * GAP; // 200
     constexpr int GRID_H = ROWS * ICON_SIZE + (ROWS - 1) * GAP; // 200
@@ -27,7 +27,7 @@ namespace
     static const AppEntry kApps[TOTAL_ICONS] = {
         { AppId::HEALTH,        LV_SYMBOL_EYE_OPEN, "Health",   LV_COLOR_MAKE(0x30, 0xB0, 0x60) },
         { AppId::MUSIC,         LV_SYMBOL_AUDIO,    "Music",    LV_COLOR_MAKE(0xE0, 0x60, 0x30) },
-        { AppId::NOTIFICATIONS, LV_SYMBOL_BELL,     "Notifs",   LV_COLOR_MAKE(0x30, 0x80, 0xE0) },
+        { AppId::MESSAGES,      LV_SYMBOL_CALL,     "Messages", LV_COLOR_MAKE(0x20, 0xC0, 0xA0) },
         { AppId::SETTINGS,      LV_SYMBOL_SETTINGS, "Settings", LV_COLOR_MAKE(0x70, 0x70, 0x70) },
     };
 
@@ -89,7 +89,7 @@ void homescreen_create()
         // App name below circle
         lv_obj_t* name = lv_label_create(scr);
         lv_label_set_text(name, app.label);
-        lv_obj_set_style_text_font(name, &lv_font_montserrat_14, 0);
+        lv_obj_set_style_text_font(name, &lv_font_montserrat_12, 0);
         lv_obj_set_style_text_color(name, LV_COLOR_MAKE(0xCC, 0xCC, 0xCC), 0);
         lv_obj_set_width(name, ICON_SIZE);
         lv_obj_set_style_text_align(name, LV_TEXT_ALIGN_CENTER, 0);

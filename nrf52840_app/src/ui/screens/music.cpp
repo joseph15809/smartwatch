@@ -61,17 +61,17 @@ void music_create()
     lv_obj_clear_flag(controls, LV_OBJ_FLAG_SCROLLABLE);
 
     #define MAKE_BTN(parent, symbol, cb) ({                                    \
-        lv_obj_t* _b = lv_btn_create(parent);                                 \
+        lv_obj_t* _b = lv_btn_create(parent);                                  \
         lv_obj_set_size(_b, 52, 52);                                           \
-        lv_obj_set_style_bg_opa(_b, LV_OPA_TRANSP, 0);                        \
-        lv_obj_set_style_border_width(_b, 0, 0);                              \
-        lv_obj_set_style_shadow_width(_b, 0, 0);                              \
-        lv_obj_set_style_pad_all(_b, 0, 0);                                   \
-        lv_obj_add_event_cb(_b, cb, LV_EVENT_CLICKED, NULL);                  \
-        lv_obj_t* _l = lv_label_create(_b);                                   \
+        lv_obj_set_style_bg_opa(_b, LV_OPA_TRANSP, 0);                         \
+        lv_obj_set_style_border_width(_b, 0, 0);                               \
+        lv_obj_set_style_shadow_width(_b, 0, 0);                               \
+        lv_obj_set_style_pad_all(_b, 0, 0);                                    \
+        lv_obj_add_event_cb(_b, cb, LV_EVENT_CLICKED, NULL);                   \
+        lv_obj_t* _l = lv_label_create(_b);                                    \
         lv_label_set_text(_l, symbol);                                         \
-        lv_obj_set_style_text_color(_l, lv_color_white(), 0);                 \
-        lv_obj_set_style_text_font(_l, &lv_font_montserrat_20, 0);            \
+        lv_obj_set_style_text_color(_l, lv_color_white(), 0);                  \
+        lv_obj_set_style_text_font(_l, &lv_font_montserrat_20, 0);             \
         lv_obj_center(_l);                                                     \
         _b;                                                                    \
     })

@@ -76,9 +76,10 @@ namespace app
                 case touch::Gesture::SWIPE_LEFT:
                     post(Event(EventType::TOUCH_SWIPE_LEFT));
                     break;
-                case touch::Gesture::SWIPE_RIGHT:
-                    post(Event(EventType::TOUCH_SWIPE_RIGHT));
-                    break;
+                case touch::Gesture::SWIPE_RIGHT: {
+                    auto start = touch::start_point();
+                    post(Event(EventType::TOUCH_SWIPE_RIGHT, start.x, start.y));
+                } break;
                 case touch::Gesture::LONG_PRESS:
                     post(Event(EventType::TOUCH_LONG));
                     break;
