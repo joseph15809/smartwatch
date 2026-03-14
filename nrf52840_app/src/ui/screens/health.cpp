@@ -117,7 +117,7 @@ void health_create()
     dist_val  = make_card(scroll_cont, 152, LV_SYMBOL_CHARGE,   kColorDist, "Total Distance", "0.0 MI");
 }
 
-void health_create(const HealthState& s)
+void health_update(const HealthState& s)
 {
     if (!s_active) return;
 

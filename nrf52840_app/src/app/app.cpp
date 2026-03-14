@@ -58,6 +58,9 @@ namespace app
         if (now - last10 >= 10) { last10 = now; post(Event(EventType::TICK_10MS)); }
         if (now - last1s >= 1000) { last1s = now; post(Event(EventType::TICK_1S)); }
 
+        // process ANCS notification queue
+        ble::poll();
+
         // poll button, will later be interrupt
         buttons::poll();
         touch::poll();

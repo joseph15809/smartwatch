@@ -23,6 +23,10 @@ enum class EventType : uint8_t
     // Event.a = elapsed seconds, Event.b = duration seconds
     // title/artist come via a separate MusicState update (BLE callback)
     BLE_MEDIA_STATE,
+    BLE_TIME_SYNC,   // RTC updated by BLE; ui re-reads rtc::now()
+    BLE_MUSIC_META,  // Full music metadata updated; ui reads ble::music_state()
+    BLE_MSG_UPDATE,    // Messages list updated; ui reads ble::messages_state()
+    BLE_THREAD_UPDATE, // Thread messages updated; ui reads ble::thread_state()
 };
 
 struct Event

@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ui.h"
 #include "../hal/rtc.h"
+#include "../hal/ble.h"
 #include "../app/app.h"
 #include "screens/lockscreen.h"
 #include "screens/music.h"
@@ -185,11 +186,48 @@ namespace ui
                 }
             } break;
 
-            // BLE 
+            // BLE
+            case EventType::BLE_TIME_SYNC: {
+                rtc::DateTime dt = rtc::now();
+                if (s_clock_lbl)
+                {
+                    char buf[8];
+                    snprintf(buf, sizeof(buf), "%02u:%02u", dt.hour, dt.min);
+                    lv_label_set_text(s_clock_lbl, buf);
+                }
+                if (cur == Screen::LOCKSCREEN) lockscreen_update(dt);
+            } break;
+
+            case EventType::BLE_NOTIF: {
+                s_notif = ble::notif_state();
+                if (cur == Screen::NOTIF) notif_update(s_notif);
+            } break;
+
+            case EventType::BLE_MUSIC_META: {
+                if (cur == Screen::MUSIC) music_update(ble::music_state());
+            } break;
+
+            case EventType::BLE_MSG_UPDATE: {
+                s_messages = ble::messages_state();
+                if (cur == Screen::MESSAGES) messages_update(s_messages);
+            } break;
+
+            case EventType::BLE_THREAD_UPDATE: {
+                s_thread = ble::thread_state();
+                if (cur == Screen::MESSAGE_THREAD) {
+                    destroy_current();
+                    lv_obj_clean(lv_scr_act());
+                    cur = Screen::MESSAGE_THREAD;
+                    thread_create(s_thread);
+                    set_clock_visible(true);
+                }
+            } break;
+
             case EventType::BLE_MEDIA_STATE: {
                 if (cur == Screen::MUSIC)
                 {
-                    MusicState ms;
+                    // Use the full state from BLE (includes title/artist already set by MC)
+                    MusicState ms = ble::music_state();
                     ms.elapsed  = (uint32_t)e.a;
                     ms.duration = (uint32_t)e.b;
                     music_update(ms);
@@ -248,9 +286,16 @@ namespace ui
                         int idx = (content_y - 8) / 72;
                         if (idx >= 0 && idx < messages_count())
                         {
-                            s_thread = ThreadState{};
-                            strncpy(s_thread.peer, messages_peer(idx),
-                                    sizeof(s_thread.peer) - 1);
+                            const char* peer = messages_peer(idx);
+                            // Use BLE thread state if it matches this peer,
+                            // otherwise show an empty thread for this peer
+                            const ThreadState& ble_thread = ble::thread_state();
+                            if (strncmp(ble_thread.peer, peer, sizeof(s_thread.peer)) == 0)
+                                s_thread = ble_thread;
+                            else {
+                                s_thread = ThreadState{};
+                                strncpy(s_thread.peer, peer, sizeof(s_thread.peer) - 1);
+                            }
                             show(Screen::MESSAGE_THREAD);
                         }
                     }
