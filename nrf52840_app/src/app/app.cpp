@@ -3,6 +3,7 @@
 #include "../hal/buttons.h"
 #include "../hal/touch.h"
 #include "../hal/ble.h"
+#include "../hal/imu.h"
 #include <Arduino.h>
 
 namespace
@@ -39,6 +40,7 @@ namespace app
 {
     void init(){
         ble::init();
+        imu::init();
         ui::init();
         buttons::init();
         touch::init();
@@ -56,7 +58,7 @@ namespace app
         // periodic ticks, replays delay()
         uint32_t now = millis();
         if (now - last10 >= 10) { last10 = now; post(Event(EventType::TICK_10MS)); }
-        if (now - last1s >= 1000) { last1s = now; post(Event(EventType::TICK_1S)); }
+        if (now - last1s >= 1000) { last1s = now; imu::poll(); post(Event(EventType::TICK_1S)); }
 
         // process ANCS notification queue
         ble::poll();

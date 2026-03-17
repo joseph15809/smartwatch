@@ -4,6 +4,7 @@
 #include "ui.h"
 #include "../hal/rtc.h"
 #include "../hal/ble.h"
+#include "../hal/imu.h"
 #include "../app/app.h"
 #include "screens/lockscreen.h"
 #include "screens/music.h"
@@ -183,6 +184,14 @@ namespace ui
                     char buf[8];
                     snprintf(buf, sizeof(buf), "%02u:%02u", dt.hour, dt.min);
                     lv_label_set_text(s_clock_lbl, buf);
+                }
+                if (cur == Screen::HEALTH)
+                {
+                    HealthState hs;
+                    hs.heart_rate = 0;
+                    hs.steps      = imu::steps();
+                    hs.distance   = imu::distance_m();
+                    health_update(hs);
                 }
             } break;
 

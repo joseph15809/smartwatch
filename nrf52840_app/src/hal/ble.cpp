@@ -181,7 +181,7 @@ namespace
         app::post(Event(EventType::BLE_MSG_UPDATE));
     }
 
-    // MT|peer|sent|text  — add one message to a thread (switches active thread if peer differs)
+    // MT|peer|sent|text — add one message to a thread (switches active thread if peer differs)
     void handle_MT(char* rest)
     {
         char* tok = strtok(rest, "|");
@@ -212,7 +212,7 @@ namespace
         app::post(Event(EventType::BLE_THREAD_UPDATE));
     }
 
-    // MTC  (no fields) — clear thread
+    // MTC (no fields) — clear thread
     void handle_MTC()
     {
         s_thread.count = 0;
@@ -339,23 +339,22 @@ namespace ble
         s_ancs.begin();
         s_ancs.setNotificationCallback(ancs_notification_cb);
 
-        // Pairing: Just Works (no display/keyboard needed)
-        Bluefruit.Security.setIOCaps(BLE_GAP_IO_CAPS_NONE);
+        // Pairing
+        Bluefruit.Security.setIOCaps(false, false, false);
 
         // Callbacks for ANCS — must be secured before ANCS notifications flow
-        Bluefruit.setConnectCallback(connect_callback);
+        Bluefruit.Periph.setConnectCallback(connect_callback);
         Bluefruit.Security.setSecuredCallback(secured_callback);
 
         // Advertising packet (~28 bytes):
-        //   flags + txpower + HID appearance + ANCS solicitation UUID
+        // flags + txpower + HID appearance + ANCS solicitation UUID
         // iOS looks for the ANCS solicitation UUID to know this device wants notifications.
         Bluefruit.Advertising.addFlags(BLE_GAP_ADV_FLAGS_LE_ONLY_GENERAL_DISC_MODE);
         Bluefruit.Advertising.addTxPower();
         Bluefruit.Advertising.addAppearance(BLE_APPEARANCE_GENERIC_HID);
         Bluefruit.Advertising.addService(s_ancs);  // ANCS solicitation UUID
 
-        // Scan Response (~30 bytes):
-        //   NUS service UUID (iOS companion app scans for this) + device name
+        // NUS service UUID (iOS companion app scans for this) + device name
         Bluefruit.ScanResponse.addService(s_uart);
         Bluefruit.ScanResponse.addName();
 
